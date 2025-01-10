@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -58,8 +59,12 @@ export class BooksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.booksService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const book = await this.booksService.findOne(id);
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+    return book;
   }
 
   @Patch(':id')
